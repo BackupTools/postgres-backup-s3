@@ -10,6 +10,7 @@ Docker image to backup Postgres database to S3 using pg_dump and compress using 
 - [x] Compression is done with pigz (parallel gzip)
 - [x] Creates bucket if it's not created
 - [x] Can be run in Kubernetes or Docker
+- [>] TODO: Add possibility to detect and backup all databases [planned]
 - [ ] TODO: OpenSSL encryption
 - [ ] TODO: Add other compression methods
 - [ ] TODO: Add other dbs (e.g. postgres, mysql)
