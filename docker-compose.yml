@@ -5,7 +5,7 @@ services:
     image: backuptools/postgres-backup-s3
     build: .
     environment:
-      - S3_BUCK=mongo1-backups
+      - S3_BUCK=postgres1-backups
       - S3_NAME=folder-name/backup-name-prefix
       - S3_URI=https://s3-key:s3-secret@s3.host.tld
       - PG_URI=postgres://pg-user:pg-password@postgres-host:5432/db-name

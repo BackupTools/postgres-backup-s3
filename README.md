@@ -10,8 +10,8 @@ Docker image to backup Postgres database to S3 using pg_dump and compress using 
 - [x] Compression is done with pigz (parallel gzip)
 - [x] Creates bucket if it's not created
 - [x] Can be run in Kubernetes or Docker
-- [>] TODO: Add possibility to detect and backup all databases [planned]
-- [ ] TODO: OpenSSL encryption
+- [ ] TODO: Add possibility to detect and backup all databases [planned]
+- [x] PGP encryption
 - [ ] TODO: Add other compression methods
 - [ ] TODO: Add other dbs (e.g. postgres, mysql)
 
@@ -21,6 +21,8 @@ S3_BUCK=postgres1-backups
 S3_NAME=folder-name/backup-name-prefix
 S3_URI=https://s3-key:s3-secret@s3.host.tld
 PG_URI=postgres://mongo-host:5432/db-name
+GPG_KEYSERVER=keyserver.ubuntu.com # your hpks keyserver
+GPG_KEYID=<key_id> # recipient key, backup will be encrypted if added
 ```
 
 Or see `docker-compose.yml` file to run this container with Docker.
