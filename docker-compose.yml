@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  mongo-backup:
+  postgres-backup:
     image: backuptools/postgres-backup-s3
     build: .
     environment:
