@@ -11,6 +11,7 @@ get_date () {
 : ${GPG_KEYSERVER:='keyserver.ubuntu.com'}
 : ${GPG_KEYID:=''}
 : ${COMPRESS:='pigz'}
+: ${MAINTENANCE_DB:='postgres'}
 START_DATE=`date +%Y-%m-%d_%H-%M-%S`
 
 if [ -z "$GPG_KEYID" ]
@@ -84,7 +85,7 @@ fi
 if [ -z "$DB_NAME" ]
 then
   echo "$(get_date) No specific database selected. Saving each in separate files"
-  DB_LIST=$(psql ${PG_URI%/} -A -c "SELECT datname FROM pg_database WHERE datname NOT LIKE 'template%';" | head -n -1 | tail -n +2)
+  DB_LIST=$(psql ${PG_URI%/}/${MAINTENANCE_DB} -A -c "SELECT datname FROM pg_database WHERE datname NOT LIKE 'template%';" | head -n -1 | tail -n +2)
   for db in $DB_LIST; do
     dump_db "$db"
   done
