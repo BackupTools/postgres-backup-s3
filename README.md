@@ -2,7 +2,7 @@
 
 [![Build status](https://github.com/BackupTools/postgres-backup-s3/workflows/Docker%20Image%20CI/badge.svg)]() [![Pulls](https://img.shields.io/docker/pulls/backuptools/postgres-backup-s3?style=flat&labelColor=1B3D4B&color=06A64F&logoColor=white&logo=docker&label=pulls)]()
 
-Docker image to backup Postgres database to S3 using pg_dump and compress using pigz.
+Docker image to backup Postgres database(s) to S3 using pg_dump and compress using pigz(default), xz, bzip2, lrzip, brotli, zstd.
 
 ## Advantages/features
 - [x] Supports custom S3 endpoints (e.g. minio)
@@ -15,6 +15,7 @@ Docker image to backup Postgres database to S3 using pg_dump and compress using 
 - [x] Available `COMPRESS=` methods: pigz, xz, bzip2, lrzip, brotli, zstd
 - [x] Ping database before backup
 - [ ] TODO: Add other dbs (e.g. postgres, mysql)
+- [ ] TODO: Separate definition of HOST, PORT, USERNAME, PASSWORD environment variables as an alternative to PG_URI
 
 ## Configuration
 ```bash
