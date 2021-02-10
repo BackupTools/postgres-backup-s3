@@ -20,6 +20,9 @@ spec:
             env:
               - name: PG_URI
                 value: postgres://db-svc-or-hostname:27017/dbname
+                # Available: pigz, xz, bzip2, lrzip, brotli, zstd
+              - name: COMPRESS
+                value: pigz
               - name: S3_URI
                 value: https://your-key:your-secret@s3.host.tld
               - name: S3_NAME
