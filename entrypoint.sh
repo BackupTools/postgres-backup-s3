@@ -84,7 +84,7 @@ fi
 
 if [ -z "$DB_NAME" ]
 then
-  echo "$(get_date) No specific database selected. Saving each in separate files"
+  echo "$(get_date) No database selected. Running backup for all databases:"
   DB_LIST=$(psql ${PG_URI%/}/${MAINTENANCE_DB} -A -c "SELECT datname FROM pg_database WHERE datname NOT LIKE 'template%';" | head -n -1 | tail -n +2)
   for db in $DB_LIST; do
     dump_db "$db"

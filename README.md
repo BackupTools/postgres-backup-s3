@@ -10,7 +10,7 @@ Docker image to backup Postgres database(s) to S3 using pg_dump and compress usi
 - [x] Compression is done with pigz (parallel gzip)
 - [x] Creates bucket if it's not created
 - [x] Can be run in Kubernetes or Docker
-- [x] Backs up each database to a separate file, unless a specific one is specified in the PG_URI
+- [x] Backups all databases into separate files, unless specified in the PG_URI
 - [x] PGP encryption
 - [x] Available `COMPRESS=` methods: pigz, xz, bzip2, lrzip, brotli, zstd
 - [x] Ping database before backup
@@ -33,3 +33,7 @@ Or see `docker-compose.yml` file to run this container with Docker.
 ## Cron backup with kubernetes
 
 See `kubernetes-cronjob.yml` file.
+
+## Authors & contributors
+- [Standart AG, LLC](https://standart.lv/)
+- [Pavel Khorikov](https://github.com/JargeZ)
