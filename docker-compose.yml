@@ -9,3 +9,5 @@ services:
       - S3_NAME=folder-name/backup-name-prefix
       - S3_URI=https://s3-key:s3-secret@s3.host.tld
       - PG_URI=postgres://pg-user:pg-password@postgres-host:5432/db-name
+      # Available: pigz, xz, bzip2, lrzip, brotli, zstd
+      - COMPRESS=pigz
