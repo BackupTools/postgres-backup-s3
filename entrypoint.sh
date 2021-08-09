@@ -26,7 +26,7 @@ echo "$(get_date) Postgres backup started"
 
 export MC_HOST_backup=$S3_URI
 
-mc mb backup/${S3_BUCK} --insecure
+mc mb backup/${S3_BUCK} --insecure || true
 
 case $COMPRESS in
   'pigz' )
