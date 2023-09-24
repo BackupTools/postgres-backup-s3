@@ -26,6 +26,7 @@ PG_URI=postgres://mongo-host:5432/db-name
 GPG_KEYSERVER=keyserver.ubuntu.com # your hpks keyserver
 GPG_KEYID=<key_id> # recipient key, backup will be encrypted if added
 COMPRESS=pigz # Available: pigz, xz, bzip2, lrzip, brotli, zstd
+COMPRESS_LEVEL=7 # Compression level of desired compression program
 ```
 
 Or see `docker-compose.yml` file to run this container with Docker.

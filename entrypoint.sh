@@ -11,6 +11,7 @@ get_date () {
 : ${GPG_KEYSERVER:='keyserver.ubuntu.com'}
 : ${GPG_KEYID:=''}
 : ${COMPRESS:='pigz'}
+: ${COMPRESS_LEVEL:='9'}
 : ${MAINTENANCE_DB:='postgres'}
 START_DATE=`date +%Y-%m-%d_%H-%M-%S`
 
@@ -30,15 +31,15 @@ mc mb backup/${S3_BUCK} --insecure || true
 
 case $COMPRESS in
   'pigz' )
-      COMPRESS_CMD='pigz -9'
+      COMPRESS_CMD='pigz -'${COMPRESS_LEVEL}
       COMPRESS_POSTFIX='.gz'
     ;;
   'xz' )
-      COMPRESS_CMD='xz'
+      COMPRESS_CMD='xz -'${COMPRESS_LEVEL}
       COMPRESS_POSTFIX='.xz'
     ;;
   'bzip2' )
-      COMPRESS_CMD='bzip2 -9'
+      COMPRESS_CMD='bzip2 -'${COMPRESS_LEVEL}
       COMPRESS_POSTFIX='.bz2'
     ;;
   'lrzip' )
@@ -46,11 +47,11 @@ case $COMPRESS in
       COMPRESS_POSTFIX='.lrz'
     ;;
   'brotli' )
-      COMPRESS_CMD='brotli -9'
+      COMPRESS_CMD='brotli -'${COMPRESS_LEVEL}
       COMPRESS_POSTFIX='.br'
     ;;
   'zstd' )
-      COMPRESS_CMD='zstd -9'
+      COMPRESS_CMD='zstd -'${COMPRESS_LEVEL}
       COMPRESS_POSTFIX='.zst'
     ;;
   * )
