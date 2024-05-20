@@ -1,0 +1,45 @@
+version: "3.9"
+
+volumes:
+    minio_data:
+    postgres_data:
+
+services:
+  postgres-backup:
+    image: backuptools/postgres-backup-s3
+    restart: no
+    build: .
+    environment:
+      - S3_BUCK=test-backup
+      - S3_NAME=folder-name/backup-name-prefix
+      - S3_URI=http://minio:minio123@minio:9000
+      - PG_URI=postgres://postgres:postgres@postgres:5432/postgres
+      # Available: pigz, xz, bzip2, lrzip, brotli, zstd
+      - COMPRESS=pigz
+    depends_on:
+      - minio
+      - postgres
+    entrypoint: ""
+    command: "/bin/sh -c 'while :; do sleep 10s && ./entrypoint.sh; done'"
+
+
+  minio:
+    image: minio/minio
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001" --address 0.0.0.0:9000
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./test-init.sql:/docker-entrypoint-initdb.d/init-dump.sql
+    ports:
+      - "5434:5432"
