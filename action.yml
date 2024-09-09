@@ -1,0 +1,36 @@
+name: "Backup postgres to S3"
+description: "Backup postgres to S3 bucket with encryption and compression"
+author: JargeZ
+branding:
+  icon: "save"
+  color: "orange"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+inputs:
+  gpg_keyserver:
+    description: "your hpks keyserver"
+    default: "keyserver.ubuntu.com"
+  gpg_keyid:
+    description: "recipient key, backup will be encrypted if added"
+  compress:
+    description: "Available: pigz, xz, bzip2, lrzip, brotli, zstd"
+    default: "pigz"
+  compress_level:
+    description: "Compression level of desired compression program"
+    default: "9"
+  maintenance_db:
+    description:
+    default: "postgres"
+  s3_uri:
+    description: "URI of S3 bucket. eg: https://s3-key:s3-secret@s3.host.tld"
+    required: true
+  s3_buck:
+    description: "S3 bucket name. eg: postgres1-backups"
+    required: true
+  s3_name:
+    description: "S3 path to store backups. eg: backups/db1"
+    required: true
+  pg_uri:
+    description: "Postgres URI. eg: postgres://readonly:super-secret@db:5432/postgres"
+    required: true
