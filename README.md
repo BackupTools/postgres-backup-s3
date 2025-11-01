@@ -37,4 +37,9 @@ See `kubernetes-cronjob.yml` file.
 
 ## Authors & contributors
 - [Standart AG, LLC](https://standart.lv/)
+- [OPSPRO](https://opspro.eu/)
 - [Pavel Khorikov](https://github.com/JargeZ)
+
+## Changelog
+
+[2025-11-01] Updated base docker image. Changed way of installing Minio mc command line tool.
