@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   postgres-backup:
     image: backuptools/postgres-backup-s3

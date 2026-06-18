@@ -1,0 +1,39 @@
+version: '3'
+
+vars:
+  IMAGE: backuptools/postgres-backup-s3
+
+tasks:
+  build:
+    desc: "Build linux/amd64+linux/arm64 locally (no push)"
+    cmds:
+      - docker buildx build --platform linux/amd64,linux/arm64 --progress=plain .
+
+  test:
+    desc: "Integration test: build, run backup against postgres+minio, assert success"
+    cmds:
+      - defer: docker compose -f docker-compose.test.yml down -v
+      - docker compose -f docker-compose.test.yml up -d --build --wait postgres minio
+      - |
+        OUTPUT=$(docker compose -f docker-compose.test.yml run --rm --no-deps postgres-backup /entrypoint.sh 2>&1)
+        echo "$OUTPUT"
+        echo "$OUTPUT" | grep -q "Postgres backup completed successfully" \
+          || (echo "FAIL: success message not found in output" && exit 1)
+      - |
+        FILES=$(docker compose -f docker-compose.test.yml run --rm --no-deps \
+          -e MC_HOST_backup=http://minio:minio123@minio:9000 \
+          postgres-backup mc ls backup/test-backup/ --recursive --insecure 2>/dev/null)
+        echo "$FILES"
+        echo "$FILES" | grep -q "\.pgdump" \
+          || (echo "FAIL: no .pgdump files found in minio bucket" && exit 1)
+        echo "PASS: backup file verified in minio"
+      - |
+        if docker compose -f docker-compose.test.yml run --rm --no-deps \
+          -e MC_HOST_backup=http://minio:minio123@minio:9000 \
+          postgres-backup sh -c \
+          'mc find backup/test-backup/ --insecure 2>/dev/null | head -1 | xargs mc cat --insecure | pigz -d | grep -q "test_table"'; then
+          echo "PASS: backup content verified (test_table found in dump)"
+        else
+          echo "FAIL: test_table not found in backup content"
+          exit 1
+        fi
