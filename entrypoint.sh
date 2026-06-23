@@ -8,11 +8,15 @@ get_date () {
 }
 
 # Script
-: ${GPG_KEYSERVER:='keyserver.ubuntu.com'}
-: ${GPG_KEYID:=''}
-: ${COMPRESS:='pigz'}
-: ${COMPRESS_LEVEL:='9'}
-: ${MAINTENANCE_DB:='postgres'}
+: ${GPG_KEYSERVER:=${INPUT_GPG_KEYSERVER:='keyserver.ubuntu.com'}}
+: ${GPG_KEYID:=${INPUT_GPG_KEYID:=''}}
+: ${COMPRESS:=${INPUT_COMPRESS:='pigz'}}
+: ${COMPRESS_LEVEL:=${INPUT_COMPRESS_LEVEL:='9'}}
+: ${MAINTENANCE_DB:=${INPUT_MAINTENANCE_DB:='postgres'}}
+: ${S3_URI:=${INPUT_S3_URI:=''}}
+: ${S3_BUCK:=${INPUT_S3_BUCK:=''}}
+: ${S3_NAME:=${INPUT_S3_NAME:=''}}
+: ${PG_URI:=${INPUT_PG_URI:=''}}
 START_DATE=`date +%Y-%m-%d_%H-%M-%S`
 
 if [ -z "$GPG_KEYID" ]

@@ -14,6 +14,7 @@ Docker image to backup Postgres database(s) to S3 using pg_dump and compress usi
 - [x] PGP encryption
 - [x] Available `COMPRESS=` methods: pigz, xz, bzip2, lrzip, brotli, zstd
 - [x] Ping database before backup
+- [x] Github Actions CI/CD
 - [ ] TODO: Add other dbs (e.g. postgres, mysql)
 - [ ] TODO: Separate definition of HOST, PORT, USERNAME, PASSWORD environment variables as an alternative to PG_URI
 
@@ -30,6 +31,29 @@ COMPRESS_LEVEL=7 # Compression level of desired compression program
 ```
 
 Or see `docker-compose.yml` file to run this container with Docker.
+
+## Github Actions
+```yaml
+name: Backup database
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  backup-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create backup
+        uses: BackupTools/postgres-backup-s3@master
+        with:
+          s3_buck: 'backups' # s3 bucket name
+          s3_name: 'service-name/db-name' # optionally nested path to store backups
+          s3_uri: '${{ secrets.BACKUP_S3_URI }}' # https://s3-key:s3-secret@s3.host.tld
+          pg_uri: '${{ secrets.BACKUP_READONLY_URI }}' # postgres://readonly:super-secret@db:5432/postgres
+          compress: pigz # Available: pigz, xz, bzip2, lrzip, brotli, zstd
+
+```
 
 ## Cron backup with kubernetes
 
