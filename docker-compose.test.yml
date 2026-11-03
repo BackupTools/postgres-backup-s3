@@ -22,7 +22,7 @@ services:
 
 
   minio:
-    image: minio/minio
+    image: pgsty/silo:RELEASE.2026-10-26T00-00-00Z
     volumes:
       - minio_data:/data
     environment:
