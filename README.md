@@ -23,6 +23,7 @@ S3_BUCK=postgres1-backups
 S3_NAME=folder-name/backup-name-prefix
 S3_URI=https://s3-key:s3-secret@s3.host.tld
 PG_URI=postgres://mongo-host:5432/db-name
+PG_DUMP_ARGS="--exclude-table-data=table1 --exclude-table-data=table2" # Extra pg_dump arguments
 GPG_KEYSERVER=keyserver.ubuntu.com # your hpks keyserver
 GPG_KEYID=<key_id> # recipient key, backup will be encrypted if added
 COMPRESS=pigz # Available: pigz, xz, bzip2, lrzip, brotli, zstd

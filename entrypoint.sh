@@ -13,6 +13,7 @@ get_date () {
 : ${COMPRESS:='pigz'}
 : ${COMPRESS_LEVEL:='9'}
 : ${MAINTENANCE_DB:='postgres'}
+: ${PG_DUMP_ARGS:=''}
 START_DATE=`date +%Y-%m-%d_%H-%M-%S`
 
 if [ -z "$GPG_KEYID" ]
@@ -69,9 +70,9 @@ dump_db(){
 
   if [ -z "$GPG_KEYID" ]
   then
-    pg_dump ${PG_URI%/}/${DATABASE} | $COMPRESS_CMD | mc pipe backup/${S3_BUCK}/${S3_NAME}-${START_DATE}-${DATABASE}.pgdump${COMPRESS_POSTFIX} --insecure
+    pg_dump ${PG_DUMP_ARGS} ${PG_URI%/}/${DATABASE} | $COMPRESS_CMD | mc pipe backup/${S3_BUCK}/${S3_NAME}-${START_DATE}-${DATABASE}.pgdump${COMPRESS_POSTFIX} --insecure
   else
-    pg_dump ${PG_URI%/}/${DATABASE} | $COMPRESS_CMD \
+    pg_dump ${PG_DUMP_ARGS} ${PG_URI%/}/${DATABASE} | $COMPRESS_CMD \
     | gpg --encrypt -z 0 --recipient ${GPG_KEYID} --trust-model always \
     | mc pipe backup/${S3_BUCK}/${S3_NAME}-${START_DATE}-${DATABASE}.pgdump${COMPRESS_POSTFIX}.pgp --insecure
   fi
