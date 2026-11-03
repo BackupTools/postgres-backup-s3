@@ -13,7 +13,8 @@ tasks:
     desc: "Integration test: build, run backup against postgres+minio, assert success"
     cmds:
       - defer: docker compose -f docker-compose.test.yml down -v
-      - docker compose -f docker-compose.test.yml up -d --build --wait postgres minio
+      - docker compose -f docker-compose.test.yml build postgres-backup
+      - docker compose -f docker-compose.test.yml up -d --wait postgres minio
       - |
         OUTPUT=$(docker compose -f docker-compose.test.yml run --rm --no-deps postgres-backup /entrypoint.sh 2>&1)
         echo "$OUTPUT"
@@ -37,3 +38,19 @@ tasks:
           echo "FAIL: test_table not found in backup content"
           exit 1
         fi
+      - |
+        docker compose -f docker-compose.test.yml run --rm --no-deps \
+          -e S3_NAME=args-test/backup \
+          -e PG_DUMP_ARGS="--exclude-table-data=test_table --exclude-table-data=other_table" \
+          postgres-backup /entrypoint.sh
+        DUMP=$(docker compose -f docker-compose.test.yml run --rm --no-deps \
+          -e MC_HOST_backup=http://minio:minio123@minio:9000 \
+          postgres-backup sh -c \
+          'mc find backup/test-backup/args-test/ --insecure 2>/dev/null | head -1 | xargs mc cat --insecure | pigz -d')
+        echo "$DUMP" | grep -q "CREATE TABLE public.test_table" \
+          || (echo "FAIL: test_table schema not found with PG_DUMP_ARGS" && exit 1)
+        if echo "$DUMP" | grep -q "COPY public.test_table"; then
+          echo "FAIL: test_table data found, PG_DUMP_ARGS not applied"
+          exit 1
+        fi
+        echo "PASS: PG_DUMP_ARGS applied"
